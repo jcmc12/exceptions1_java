@@ -4,6 +4,8 @@ import java.text.SimpleDateFormat;
 import java.util.Date;
 import java.util.concurrent.TimeUnit;
 
+import model.exceptions.DomainException;
+
 public class Reservation {
 	
 	private Integer roomNumber;
@@ -14,8 +16,12 @@ public class Reservation {
 	//static é utilizado para evitar que tenha uma nova instância quando o objeto
 	//Reservation é instanciado
 	
-	public Reservation(Integer roomNumber, Date checkIn, Date checkOut) {
+	public Reservation(Integer roomNumber, Date checkIn, Date checkOut) throws DomainException {
 
+		if(!checkOut.after(checkIn)) { //verifica se a data de saída é após a data de entrada
+			throw new DomainException("ckeck-out date must be after ckeck-in date");
+		} 
+		
 		this.roomNumber = roomNumber;
 		this.checkIn = checkIn;
 		this.checkOut = checkOut;
@@ -45,25 +51,22 @@ public class Reservation {
 		//TimeUnit.Days.convert() converter os milissegundos para Dias
 	}
 	
-	public String updateDates(Date checkIn, Date checkOut) {
+	public void updateDates(Date checkIn, Date checkOut) throws DomainException {
 		
 		Date now = new Date();
 		
 		if(checkIn.before(now) || checkOut.before(now)) {
-			return "Error in reservation: Reservation dates"
-					+ "for update must be future";
+			throw new DomainException("Reservation dates for update must be future");
 			//faz a comparação da data atual com a data informada pelo usuário
 		}
 		
 		if(!checkOut.after(checkIn)) { //verifica se a data de saída é após a data de entrada
-			return "Error in reservation: ckeck-out date must"
-					+ "be after ckeck-in date";
+			throw new DomainException("ckeck-out date must be after ckeck-in date");
 		} 
 		
 		this.checkIn = checkIn;
 		this.checkOut = checkOut;
-		
-		return null;
+	
 	}
 	
 	@Override
