@@ -36,22 +36,17 @@ public class Programa {
 			checkIn = sdf.parse(sc.next()); //converter String para Date
 			System.out.print("Check-out date (dd/MM/yyyy): ");
 			checkOut = sdf.parse(sc.next());
+							
+			String error = reservation.updateDates(checkIn, checkOut);
 			
-			Date now = new Date(); //cria a data do dia de hoje
-			
-			if(checkIn.before(now) || checkOut.before(now)) {
-				System.out.println("Error in reservation: Reservation dates"
-						+ "for ipdate must be future");
-				//faz a comparação da data atual com a data informada pelo usuário
-			}
-			else if(!checkOut.after(checkIn)) { //verifica se a data de saída é após a data de entrada
-				System.out.println("Error in reservation: ckeck-out date must"
-						+ "be after ckeck-in date");
-			} else {
+			if(error != null) {
+				System.out.println(error);
 				
-				reservation.updateDates(checkIn, checkOut);
-				System.out.println("Reservation: " + reservation);
 			}
+			else {
+				System.out.println(error);
+			}
+		
 			
 		}
 		
